@@ -43,6 +43,8 @@ namespace AlienIsolationUtils
     {
         public static void Unpack(string filename)
         {
+            var pakName = Path.GetFileNameWithoutExtension(filename);
+
             using (var sr = new StreamReader(filename))
             using (var br = new BinaryReader(sr.BaseStream))
             {
@@ -52,7 +54,7 @@ namespace AlienIsolationUtils
                     ErrorHelper.InvalidFiletype(filename, "pak");
 
                 var offsetFromHeader = br.ReadUInt32();
-                var numberOfFiles = br.ReadUInt32() + 1;
+                var numberOfFiles = br.ReadUInt32();
                 var unknown = br.ReadUInt32();
 
                 var fileNames = new List<string>();
@@ -63,8 +65,20 @@ namespace AlienIsolationUtils
                 for (var i = 0; i < numberOfFiles; i++)
                     filePointers.Add(br.ReadUInt32());
 
-                // actually read files
+                for (int fileIdx = 0; fileIdx < numberOfFiles; fileIdx++)
+                {
+                    var start = filePointers[fileIdx];
+                    var end = fileIdx == (numberOfFiles - 1) ? sr.BaseStream.Length : filePointers[fileIdx + 1];
 
+                    br.BaseStream.Seek(start, SeekOrigin.Begin);
+                    var length = (int) (end - start);
+                    var bytes = br.ReadBytes(length);
+
+                    var dir = $"{pakName}\\{Path.GetDirectoryName(fileNames[fileIdx])}";
+                    Directory.CreateDirectory(dir);
+                    File.WriteAllBytes($"{dir}\\{Path.GetFileName(fileNames[fileIdx])}", bytes);
+                }
+                
                 Console.WriteLine($"Unpacked {numberOfFiles} files");
             }
         }
