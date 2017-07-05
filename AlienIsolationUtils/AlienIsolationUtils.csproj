@@ -47,6 +47,8 @@
     <Compile Include="Command.cs" />
     <Compile Include="ErrorHelper.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="HeaderMagic.cs" />
+    <Compile Include="Pak.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
