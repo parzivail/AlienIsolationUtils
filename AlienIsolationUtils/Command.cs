@@ -18,7 +18,7 @@ namespace AlienIsolationUtils
         public Command(string name, string syntax, string desc, Action<string[]> work, int numParams)
         {
             Name = name;
-            Syntax = syntax;
+            Syntax = syntax ?? "";
             Desc = desc;
             _work = work;
             NumParams = numParams;

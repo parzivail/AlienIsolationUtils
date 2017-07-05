@@ -29,5 +29,12 @@ namespace AlienIsolationUtils
             }
             return Encoding.UTF8.GetString(l.ToArray());
         }
+
+        public static void WriteNullTermString(this BinaryWriter writer, string str)
+        {
+            var bytes = Encoding.UTF8.GetBytes(str);
+            writer.Write(bytes);
+            writer.Write((byte)0);
+        }
     }
 }
